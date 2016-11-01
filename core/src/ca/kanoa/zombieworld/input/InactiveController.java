@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InactiveController implements BaseController {
+public class InactiveController extends BaseController {
 
     @Override
     public Vector2 getMovementDirection() {

@@ -12,4 +12,16 @@ public class Size {
         return Gdx.graphics.getPpcY() * centimeters;
     }
 
+    public static float convertY(float y) {
+        return Gdx.graphics.getHeight() - y;
+    }
+
+    public static float getScreenWidth() {
+        return Gdx.graphics.getWidth();
+    }
+
+    public static float getScreenHeight() {
+        return Gdx.graphics.getHeight();
+    }
+
 }

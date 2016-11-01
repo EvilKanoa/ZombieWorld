@@ -15,9 +15,9 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;
 		config.useCompass = false;
+        config.hideStatusBar = true;
 
         AndroidController controller = new AndroidController();
-        Gdx.input.setInputProcessor(controller);
         initialize(new ZombieWorldGame(controller), config);
 	}
 }

@@ -1,35 +1,50 @@
 package ca.kanoa.zombieworld.input;
 
+import ca.kanoa.zombieworld.utilities.Size;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
 
-public class AndroidController extends InputAdapter implements BaseController {
+public class AndroidController extends BaseController {
 
 
-    private static final float STICK_SIZE = 2.0f; // the size of the sticks in centimeters
+    private static final float STICK_SIZE = 3.0f; // the size of the sticks in centimeters
     private int moveIndex = -1, shootIndex = -1;
 
     @Override
     public Vector2 getMovementDirection() {
-        return null;
+        if (isMoving()) {
+            Vector2 movement = new Vector2((getX(moveIndex) - Size.getWidthCenti(STICK_SIZE) / 2) /
+                    Size.getWidthCenti(STICK_SIZE / 2), (getY(moveIndex) - Size.getHeightCenti(STICK_SIZE) / 2) /
+                    Size.getHeightCenti(STICK_SIZE / 2));
+            if (movement.len() > 1) {
+                movement.nor();
+            }
+            return movement;
+        } else {
+            return new Vector2(0, 0);
+        }
     }
 
     @Override
     public Vector2 getShootDirection() {
-        return null;
+        if (isShooting()) {
+            return new Vector2((getX(shootIndex) - (Size.getScreenWidth() - Size.getWidthCenti(STICK_SIZE) / 2)) / Size.getWidthCenti(STICK_SIZE / 2),
+                    (getY(shootIndex) - Size.getHeightCenti(STICK_SIZE) / 2) / Size.getHeightCenti(STICK_SIZE / 2)).nor();
+        } else {
+            return new Vector2(0, 0);
+        }
     }
 
     @Override
     public boolean isMoving() {
-        return false;
+        return moveIndex != -1 && Gdx.input.isTouched(moveIndex);
     }
 
     @Override
     public boolean isShooting() {
-        return false;
+        return shootIndex != -1 && Gdx.input.isTouched(shootIndex);
     }
 
     @Override
@@ -54,19 +69,32 @@ public class AndroidController extends InputAdapter implements BaseController {
 
     @Override
     public boolean touchDown (int x, int y, int pointer, int button) {
+        if (x < Size.getWidthCenti(STICK_SIZE) && Size.convertY(y) < Size.getHeightCenti(STICK_SIZE) &&
+                moveIndex == -1) { // check if inside movement stick
+            moveIndex = pointer;
+        } else if (x > (Size.getScreenWidth() - Size.getWidthCenti(STICK_SIZE)) &&
+                Size.convertY(y) < Size.getHeightCenti(STICK_SIZE) && shootIndex == -1) { // check if inside shoot stick
+            shootIndex = pointer;
+        }
         return true;
     }
 
     @Override
     public boolean touchUp (int x, int y, int pointer, int button) {
+        if (pointer == moveIndex) {
+            moveIndex = -1;
+        } else if (pointer == shootIndex) {
+            shootIndex = -1;
+        }
         return true;
     }
 
-    public float getX() {
-        return Gdx.input.getX();
+    public float getX(int pointer) {
+        return Gdx.input.getX(pointer);
     }
 
-    public float getY() {
-        return Gdx.graphics.getHeight() - Gdx.input.getY();
+    public float getY(int pointer) {
+        return Gdx.graphics.getHeight() - Gdx.input.getY(pointer);
     }
+
 }

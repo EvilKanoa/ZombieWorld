@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
 
-public class KeyboardController implements BaseController {
+public class KeyboardController extends BaseController {
 
     private KeyBindings bindings;
 

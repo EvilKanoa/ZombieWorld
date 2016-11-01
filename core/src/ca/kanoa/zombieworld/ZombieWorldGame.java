@@ -30,6 +30,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         _instance = this;
         eventManager = new EventManager();
         world = new GameWorld();
+        Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
@@ -46,7 +47,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         controller.update(delta);
         world.update(delta);
 
-        System.out.println("dir: " + controller.getShootDirection().angle());
+        Gdx.app.log("Main Loop", "speed: " + controller.getMovementDirection().len());
     }
 
     @Override
