@@ -14,6 +14,7 @@ public class EventManager {
         comparator = new EventHandlerComparator();
     }
 
+    @SuppressWarnings("unchecked")
     public void register(EventListener handler) throws EventRegistrationExeception {
         for (Method method : handler.getClass().getMethods()) {
             if (method.getAnnotation(EventHandler.class) != null) {
