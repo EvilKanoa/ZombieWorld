@@ -17,12 +17,19 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     private EventManager eventManager;
     private BaseController controller;
+    private GameWorld world;
+    private static ZombieWorldGame _instance;
     private long lastUpdate, delta;
-	
+
+    public ZombieWorldGame(BaseController controller) {
+        this.controller = controller;
+    }
+
 	@Override
 	public void create () {
+        _instance = this;
         eventManager = new EventManager();
-        controller = new InactiveController();
+        world = new GameWorld();
 
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
@@ -37,6 +44,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         lastUpdate = System.currentTimeMillis();
 
         controller.update(delta);
+
+        System.out.println("dir: " + controller.getShootDirection().angle());
     }
 
     @Override
@@ -44,7 +53,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(img, 10, 10);
+        batch.draw(img, world.getPlayer().getPosition().x - img.getWidth() / 4,
+                world.getPlayer().getPosition().y - img.getHeight() / 4, img.getWidth() / 2, img.getHeight() / 2);
         batch.end();
 
         controller.render();
@@ -62,6 +72,22 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         } catch (EventRegistrationExeception eventRegistrationExeception) {
             eventRegistrationExeception.printStackTrace();
         }
+    }
+
+    public static ZombieWorldGame getGame() {
+        return _instance;
+    }
+
+    public GameWorld getGameWorld() {
+        return this.world;
+    }
+
+    public EventManager getEventManager() {
+        return this.eventManager;
+    }
+
+    public BaseController getController() {
+        return this.controller;
     }
 
 }
