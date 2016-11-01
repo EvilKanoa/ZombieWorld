@@ -44,6 +44,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         lastUpdate = System.currentTimeMillis();
 
         controller.update(delta);
+        world.update(delta);
 
         System.out.println("dir: " + controller.getShootDirection().angle());
     }
@@ -58,6 +59,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         batch.end();
 
         controller.render();
+        world.render();
     }
 
     @Override
