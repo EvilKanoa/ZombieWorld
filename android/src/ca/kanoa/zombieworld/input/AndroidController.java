@@ -39,12 +39,22 @@ public class AndroidController extends BaseController {
 
     @Override
     public boolean isMoving() {
-        return moveIndex != -1 && Gdx.input.isTouched(moveIndex);
+        if (moveIndex != -1 && Gdx.input.isTouched(moveIndex)) {
+            return true;
+        } else {
+            moveIndex = -1;
+            return false;
+        }
     }
 
     @Override
     public boolean isShooting() {
-        return shootIndex != -1 && Gdx.input.isTouched(shootIndex);
+        if (shootIndex != -1 && Gdx.input.isTouched(shootIndex)) {
+            return true;
+        } else {
+            shootIndex = -1;
+            return false;
+        }
     }
 
     @Override

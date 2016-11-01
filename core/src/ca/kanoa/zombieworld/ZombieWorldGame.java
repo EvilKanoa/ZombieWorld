@@ -4,7 +4,6 @@ import ca.kanoa.zombieworld.events.EventListener;
 import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.input.BaseController;
-import ca.kanoa.zombieworld.input.InactiveController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -56,7 +55,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(img, world.getPlayer().getPosition().x - img.getWidth() / 4,
-                world.getPlayer().getPosition().y - img.getHeight() / 4, img.getWidth() / 2, img.getHeight() / 2);
+                world.getPlayer().getPosition().y - img.getHeight() / 4, 0f, 0f, img.getWidth(), img.getHeight(),
+                1f, 1f, controller.getShootDirection().angle(), img.getWidth() / 2, img.getHeight() / 2, img.getWidth(), img.getHeight(), false, false);
         batch.end();
 
         controller.render();
