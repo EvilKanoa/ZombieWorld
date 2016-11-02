@@ -11,4 +11,8 @@ public class ShaderLoader {
         return new ShaderProgram(vertexShader, fragmentShader);
     }
 
+    public static String getShader(String name) {
+        return Gdx.files.internal("shaders/" + name).readString();
+    }
+
 }
