@@ -3,6 +3,7 @@ package ca.kanoa.zombieworld;
 import ca.kanoa.zombieworld.events.EventListener;
 import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
+import ca.kanoa.zombieworld.graphics.Camera;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,6 +20,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     private GameWorld world;
     private static ZombieWorldGame _instance;
     private long lastUpdate, delta;
+
+    private Camera camera;
 
     public ZombieWorldGame(BaseController controller) {
         this.controller = controller;
@@ -79,6 +82,10 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     public static ZombieWorldGame getGame() {
         return _instance;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     public GameWorld getGameWorld() {
