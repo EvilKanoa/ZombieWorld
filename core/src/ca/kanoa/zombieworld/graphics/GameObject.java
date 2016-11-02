@@ -2,6 +2,7 @@ package ca.kanoa.zombieworld.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import ca.kanoa.zombieworld.ZombieWorldGame;
@@ -23,6 +24,8 @@ public class GameObject {
     IntBuffer indexBuffer;
 
     public GameObject() {
+        ShaderProgram shader = ShaderLoader.compile("vs.glsl", "ps.glsl");
+
         vertices[0] = new Vertex(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
         vertices[1] = new Vertex(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
         vertices[2] = new Vertex(1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
