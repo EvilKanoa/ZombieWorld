@@ -4,6 +4,7 @@ import ca.kanoa.zombieworld.events.EventListener;
 import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.graphics.Camera;
+import ca.kanoa.zombieworld.graphics.GameObject;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
-
+    GameObject pizza;
 	SpriteBatch batch;
 	Texture img;
 
@@ -34,6 +35,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         world = new GameWorld();
         Gdx.input.setInputProcessor(controller);
 
+        pizza = new GameObject();
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 
@@ -49,6 +51,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         controller.update(delta);
         world.update(delta);
 
+        pizza.update(delta);
+
         Gdx.app.log("Main Loop", "speed: " + controller.getMovementDirection().len());
     }
 
@@ -62,6 +66,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
                 1f, 1f, controller.getShootDirection().angle(), img.getWidth() / 2, img.getHeight() / 2, img.getWidth(), img.getHeight(), false, false);
         batch.end();
 
+        //pizza.render();
         controller.render();
         world.render();
     }
