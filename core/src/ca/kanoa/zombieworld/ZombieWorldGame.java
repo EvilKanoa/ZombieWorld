@@ -3,6 +3,7 @@ package ca.kanoa.zombieworld;
 import ca.kanoa.zombieworld.events.EventListener;
 import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
+import ca.kanoa.zombieworld.files.Settings;
 import ca.kanoa.zombieworld.graphics.Camera;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     private EventManager eventManager;
     private BaseController controller;
     private GameWorld world;
+
     private static ZombieWorldGame _instance;
     private long lastUpdate, delta;
 
@@ -32,6 +34,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         _instance = this;
         eventManager = new EventManager();
         world = new GameWorld();
+        Settings.loadFile(Config.SETTINGS_FILE);
         Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
@@ -48,8 +51,6 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
         controller.update(delta);
         world.update(delta);
-
-        Gdx.app.log("Main Loop", "speed: " + controller.getMovementDirection().len());
     }
 
     @Override

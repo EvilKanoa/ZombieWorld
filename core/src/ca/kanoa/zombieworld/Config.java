@@ -5,6 +5,7 @@ package ca.kanoa.zombieworld;
  */
 public class Config {
 
-    public static final String TITLE = "Zombie World";
+    public static final String TITLE                        = "Zombie World";
+    public static final String SETTINGS_FILE                = "zw_options.xml";
 
 }
