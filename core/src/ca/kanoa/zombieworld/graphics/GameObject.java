@@ -31,7 +31,7 @@ public class GameObject implements Updateable, Drawable {
     Texture texture;
 
     public GameObject() {
-        shader = ShaderLoader.compile("vs.glsl", "ps.glsl");
+        shader = ShaderLoader.compile("vs.glsl", "fs.glsl");
 
         texture = new Texture("badlogic.jpg");
 
@@ -92,13 +92,13 @@ public class GameObject implements Updateable, Drawable {
 
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ARRAY_BUFFER, vbo);
 
-        int posLoc = shader.getAttributeLocation("position");
+        //int posLoc = shader.getAttributeLocation("position");
         //int normalLoc = shader.getAttributeLocation("inNormal");
         //int texCoordLoc = shader.getAttributeLocation("inTexCoord");
 
         // Position attribute
-        Gdx.gl.glEnableVertexAttribArray(posLoc);
-        Gdx.gl.glVertexAttribPointer(posLoc, 3, Gdx.gl.GL_FLOAT, false, 4 * 3, 0);
+        Gdx.gl.glEnableVertexAttribArray(0);
+        Gdx.gl.glVertexAttribPointer(0, 3, Gdx.gl.GL_FLOAT, false, 4 * 3, 0);
         // Normal attribute
         //Gdx.gl.glEnableVertexAttribArray(normalLoc);
         //Gdx.gl.glVertexAttribPointer(normalLoc, 3, Gdx.gl.GL_FLOAT, false, 8 * 4, 0);
@@ -124,6 +124,6 @@ public class GameObject implements Updateable, Drawable {
         Gdx.gl.glDrawElements(Gdx.gl.GL_TRIANGLES, 6, Gdx.gl.GL_SHORT, 0);
         //Gdx.gl.glDrawElements(Gdx.gl.GL_TRIANGLES, 6, Gdx.gl.GL_UNSIGNED_SHORT, 0);
 
-        //shader.end();
+        shader.end();
     }
 }
