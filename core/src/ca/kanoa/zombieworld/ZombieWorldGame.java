@@ -9,11 +9,12 @@ import ca.kanoa.zombieworld.graphics.GameObject;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
-	//SpriteBatch batch;
+	SpriteBatch batch;
 	//Texture img;
 
     GameObject pizza;
