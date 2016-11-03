@@ -1,6 +1,6 @@
 package ca.kanoa.zombieworld.events;
 
-public class Event {
+public abstract class Event {
 
     private boolean cancelled = false;
 

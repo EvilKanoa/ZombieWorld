@@ -9,8 +9,6 @@ import ca.kanoa.zombieworld.graphics.GameObject;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
@@ -20,9 +18,9 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     GameObject pizza;
 
-    private EventManager eventManager;
-    private BaseController controller;
-    private GameWorld world;
+    public final EventManager events = new EventManager();
+    public final BaseController controller;
+    public GameWorld world;
 
     private static ZombieWorldGame _instance;
     private long lastUpdate, delta;
@@ -36,10 +34,10 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 	@Override
 	public void create () {
         _instance = this;
-        eventManager = new EventManager();
-        world = new GameWorld();
         Settings.loadFile(Config.SETTINGS_FILE);
         Gdx.input.setInputProcessor(controller);
+
+        world = new GameWorld();
 
         camera = new Camera(new Vector2(0.0f, 0.0f));
 
@@ -90,7 +88,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     public void registerEventListener(EventListener listener) {
         try {
-            eventManager.register(listener);
+            events.register(listener);
         } catch (EventRegistrationExeception eventRegistrationExeception) {
             eventRegistrationExeception.printStackTrace();
         }
@@ -102,18 +100,6 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     public Camera getCamera() {
         return camera;
-    }
-
-    public GameWorld getGameWorld() {
-        return this.world;
-    }
-
-    public EventManager getEventManager() {
-        return this.eventManager;
-    }
-
-    public BaseController getController() {
-        return this.controller;
     }
 
 }
