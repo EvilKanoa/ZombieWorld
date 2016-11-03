@@ -12,11 +12,13 @@ public class Camera {
     Vector3 up = new Vector3(0.0f, 0.0f, 1.0f);
 
     public Camera(Vector2 position) {
-        projection.setToProjection(0.0f, 1.0f, 3.14159f/2.0f, (float) (Gdx.graphics.getWidth()) / (float) (Gdx.graphics.getHeight()));
-        view.setToLookAt(new Vector3(position.x, position.y, 0.0f), target, up);
+        projection = new Matrix4();
+        view = new Matrix4();
+        projection.setToProjection(0.1f, 1000.0f, 3.14159f/2.0f, (float) (Gdx.graphics.getWidth()) / (float) (Gdx.graphics.getHeight()));
+        view.setToLookAt(new Vector3(position.x, position.y, 100.0f), target, up);
     }
 
     public void update(Vector2 position) {
-        view.setToLookAt(new Vector3(position.x, position.y, 0.0f), target, up);
+        view.setToLookAt(new Vector3(position.x, position.y, 100.0f), target, up);
     }
 }

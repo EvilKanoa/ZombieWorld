@@ -5,16 +5,20 @@ import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.files.Settings;
 import ca.kanoa.zombieworld.graphics.Camera;
+import ca.kanoa.zombieworld.graphics.GameObject;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
-	SpriteBatch batch;
-	Texture img;
+	//SpriteBatch batch;
+	//Texture img;
+
+    GameObject pizza;
 
     private EventManager eventManager;
     private BaseController controller;
@@ -37,8 +41,12 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         Settings.loadFile(Config.SETTINGS_FILE);
         Gdx.input.setInputProcessor(controller);
 
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+        camera = new Camera(new Vector2(0.0f, 0.0f));
+
+		//batch = new SpriteBatch();
+		//img = new Texture("badlogic.jpg");
+
+        pizza = new GameObject();
 
         lastUpdate = System.currentTimeMillis();
 	}
@@ -49,6 +57,10 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         delta = System.currentTimeMillis() - lastUpdate;
         lastUpdate = System.currentTimeMillis();
 
+        camera.update(new Vector2(0.0f, 0.0f));
+
+        pizza.update(delta);
+
         controller.update(delta);
         world.update(delta);
     }
@@ -57,11 +69,14 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     public void renderGame() {
         Gdx.gl.glClearColor(1, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        /*
         batch.begin();
         batch.draw(img, world.getPlayer().getPosition().x - img.getWidth() / 4,
                 world.getPlayer().getPosition().y - img.getHeight() / 4, 0f, 0f, img.getWidth(), img.getHeight(),
                 1f, 1f, controller.getShootDirection().angle(), img.getWidth() / 2, img.getHeight() / 2, img.getWidth(), img.getHeight(), false, false);
         batch.end();
+        */
+        pizza.render();
 
         controller.render();
         world.render();
@@ -69,8 +84,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     @Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+		//batch.dispose();
+		//img.dispose();
 	}
 
     public void registerEventListener(EventListener listener) {
