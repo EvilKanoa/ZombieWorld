@@ -14,7 +14,7 @@ public class Camera {
     public Camera(Vector2 position) {
         projection = new Matrix4();
         view = new Matrix4();
-        projection.setToProjection(0.01f, 1000.0f, 90.0f, (float) (Gdx.graphics.getWidth()) / (float) (Gdx.graphics.getHeight()));
+        projection.setToProjection(0.01f, 1000.0f, 60.0f, (float) (Gdx.graphics.getWidth()) / (float) (Gdx.graphics.getHeight()));
         view.setToLookAt(new Vector3(position.x, position.y, 100.0f), target, up);
     }
 
