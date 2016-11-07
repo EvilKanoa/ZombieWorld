@@ -5,6 +5,7 @@ import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.files.Settings;
 import ca.kanoa.zombieworld.graphics.GameObject;
+import ca.kanoa.zombieworld.graphics.Render2D;
 import ca.kanoa.zombieworld.graphics.Sprite;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
@@ -22,8 +23,9 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     Sprite sprite;
     GameObject pizza;
 
-    public final EventManager events = new EventManager();
-    public final BaseController controller;
+    public EventManager events = new EventManager();
+    public BaseController controller;
+    public Render2D renderer;
     public GameWorld world;
 
     private static ZombieWorldGame _instance;
@@ -40,6 +42,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         Gdx.input.setInputProcessor(controller);
 
         world = new GameWorld();
+        renderer = new Render2D();
 
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
