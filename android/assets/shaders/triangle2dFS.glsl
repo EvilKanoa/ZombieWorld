@@ -1,4 +1,4 @@
-#version 120
+#version 100
 
 uniform vec4 color;
 
