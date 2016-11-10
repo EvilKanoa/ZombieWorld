@@ -12,9 +12,6 @@ import com.badlogic.gdx.Gdx;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-/**
- * Created by Jonathan on 2016-11-03.
- */
 public class Sprite {
     Matrix4 projWorld;
     int vbo, ebo;
@@ -24,7 +21,7 @@ public class Sprite {
     Texture texture;
 
     public Sprite() {
-        shader = ShaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
+        shader = ZombieWorldGame.getGame().shaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
 
         texture = new Texture("badlogic.jpg");
 

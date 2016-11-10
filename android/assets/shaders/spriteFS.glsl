@@ -1,5 +1,3 @@
-#version 100
-
 varying vec2 texCoord;
 
 uniform sampler2D texture;

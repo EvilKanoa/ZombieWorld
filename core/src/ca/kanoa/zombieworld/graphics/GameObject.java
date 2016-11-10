@@ -30,7 +30,7 @@ public class GameObject implements Drawable {
     Texture texture;
 
     public GameObject() {
-        shader = ShaderLoader.compile("cubeVS.glsl", "cubeFS.glsl");
+        shader = ZombieWorldGame.getGame().shaderLoader.compile("cubeVS.glsl", "cubeFS.glsl");
 
         texture = new Texture("badlogic.jpg");
 

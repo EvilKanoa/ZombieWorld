@@ -2,6 +2,7 @@ package ca.kanoa.zombieworld.graphics;
 
 import ca.kanoa.zombieworld.Drawable;
 import ca.kanoa.zombieworld.Updateable;
+import ca.kanoa.zombieworld.ZombieWorldGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,8 +31,8 @@ public class Render2D implements Drawable, Updateable {
 
     public Render2D() {
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        triangleShader = ShaderLoader.compile("2dVS.glsl", "triangle2dFS.glsl");
-        circleShader = ShaderLoader.compile("2dVS.glsl", "circle2dFS.glsl");
+        triangleShader = ZombieWorldGame.getGame().shaderLoader.compile("2dVS.glsl", "triangle2dFS.glsl");
+        circleShader = ZombieWorldGame.getGame().shaderLoader.compile("2dVS.glsl", "circle2dFS.glsl");
         triangleQueue = new LinkedList<Float[]>();
         circleQueue = new LinkedList<Float[]>();
         vbo = gl.glGenBuffer();

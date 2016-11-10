@@ -1,5 +1,3 @@
-#version 100
-
 varying vec3 normal;
 varying vec2 texCoord;
 

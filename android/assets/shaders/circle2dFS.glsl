@@ -1,5 +1,3 @@
-#version 100
-
 uniform vec4 color;
 uniform vec2 position;
 uniform vec2 center;

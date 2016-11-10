@@ -6,6 +6,7 @@ import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.files.Settings;
 import ca.kanoa.zombieworld.graphics.GameObject;
 import ca.kanoa.zombieworld.graphics.Render2D;
+import ca.kanoa.zombieworld.graphics.ShaderLoader;
 import ca.kanoa.zombieworld.graphics.Sprite;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +28,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     public BaseController controller;
     public Render2D renderer;
     public GameWorld world;
+    public ShaderLoader shaderLoader;
 
     private static ZombieWorldGame _instance;
     private long lastUpdate, delta;
@@ -34,7 +36,11 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     private OrthographicCamera orthographicCamera;
     private PerspectiveCamera perspectiveCamera;
 
-    public ZombieWorldGame(BaseController controller) { this.controller = controller; }
+    public ZombieWorldGame(BaseController controller, ShaderLoader shaderLoader) {
+        this.controller = controller;
+        this.shaderLoader = shaderLoader;
+    }
+
 	@Override
 	public void create () {
         _instance = this;
