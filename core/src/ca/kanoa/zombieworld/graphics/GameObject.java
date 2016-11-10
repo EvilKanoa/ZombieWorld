@@ -14,16 +14,16 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 public class GameObject implements Drawable {
-    Matrix4 translation;
-    Matrix4 scale;
-    public Matrix4 rotation;
-    Matrix4 world;
-    Matrix4 wvp; // world view projection matrix
+    private Matrix4 translation;
+    private Matrix4 scale;
+    private Matrix4 rotation;
+    private Matrix4 world;
+    private Matrix4 wvp; // world view projection matrix
 
-    int vbo, ebo;
+    private int vbo, ebo;
 
-    Vertex vertices[];
-    short indices[];
+    private Vertex vertices[];
+    private short indices[];
 
     ShaderProgram shader;
 
@@ -32,7 +32,7 @@ public class GameObject implements Drawable {
     public GameObject() {
         shader = ShaderLoader.compile("cubeVS.glsl", "cubeFS.glsl");
 
-        //texture = new Texture("badlogic.jpg");
+        texture = new Texture("badlogic.jpg");
 
         translation = new Matrix4();
         scale = new Matrix4();
@@ -41,25 +41,25 @@ public class GameObject implements Drawable {
         wvp = new Matrix4();
 
         vertices = new Vertex[4];
-        vertices[0] = new Vertex(-100.0f, -100.0f, 200.0f/*, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f*/);
-        vertices[1] = new Vertex(100.0f, -100.0f, 200.0f/*, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f*/);
-        vertices[2] = new Vertex(100.0f, 100.0f, 200.0f/*, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f*/);
-        vertices[3] = new Vertex(-100.0f, 100.0f, 200.0f/*, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f*/);
+        vertices[0] = new Vertex(-100.0f, -100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+        vertices[1] = new Vertex(100.0f, -100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+        vertices[2] = new Vertex(100.0f, 100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+        vertices[3] = new Vertex(-100.0f, 100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
 
-        //vertexBuffer = BufferUtils.newFloatBuffer(vertices.length * 8);
-        FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length * 3);
+        FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length * 8);
         for (int i = 0; i < vertices.length; i++)
             vertexBuffer.put(vertices[i].getFloats());
         vertexBuffer.flip();
 
         indices = new short[] {0, 1, 2, 0, 2, 3};
+
         ShortBuffer indexBuffer = BufferUtils.newShortBuffer(indices.length);
         indexBuffer.put(indices);
         indexBuffer.flip();
 
         vbo = Gdx.gl.glGenBuffer();
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ARRAY_BUFFER, vbo);
-        Gdx.gl.glBufferData(Gdx.gl.GL_ARRAY_BUFFER, vertices.length * 3 * Float.SIZE / 8, vertexBuffer, GL20.GL_STATIC_DRAW);
+        Gdx.gl.glBufferData(Gdx.gl.GL_ARRAY_BUFFER, vertices.length * 8 * Float.SIZE / 8, vertexBuffer, GL20.GL_STATIC_DRAW);
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ARRAY_BUFFER, 0);
 
         ebo = Gdx.gl.glGenBuffer();
@@ -81,9 +81,6 @@ public class GameObject implements Drawable {
         wvp.set(ZombieWorldGame.getGame().getPerspectiveCamera().projection);
         wvp.mul(ZombieWorldGame.getGame().getPerspectiveCamera().view);
         wvp.mul(world);
-        //wvp.inv();
-        //wvp.tra();
-        //wvp.inv();
     }
 
     @Override
@@ -93,13 +90,17 @@ public class GameObject implements Drawable {
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ARRAY_BUFFER, vbo);
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-        shader.setVertexAttribute("position", 3, Gdx.gl.GL_FLOAT, false, 0, 0);
-        //shader.setVertexAttribute("position", 3, Gdx.gl.GL_FLOAT, false, 12, 0);
-        shader.enableVertexAttribute("position");
+        texture.bind();
 
-        shader.setUniformMatrix4fv("wvp", wvp.getValues(), 0, 16);
-        //shader.setUniformMatrix4fv("wvp", wvp.getValues(), 0, 16);
-        //shader.setUniformMatrix4fv("wvp", wvp.getValues(), 0, 16);
+        shader.setVertexAttribute("inPosition", 3, Gdx.gl.GL_FLOAT, false, 32, 0);
+        shader.setVertexAttribute("inNormal", 3, Gdx.gl.GL_FLOAT, false, 32, 12);
+        shader.setVertexAttribute("inTexCoord", 2, Gdx.gl.GL_FLOAT, false, 32, 24);
+        shader.enableVertexAttribute("inPosition");
+        shader.enableVertexAttribute("inNormal");
+        shader.enableVertexAttribute("inTexCoord");
+
+        shader.setUniformMatrix4fv(shader.getUniformLocation("wvp"), wvp.getValues(), 0, 16);
+        shader.setUniformi(shader.getUniformLocation("texture"), 0);
 
         Gdx.gl.glDrawElements(Gdx.gl.GL_TRIANGLES, indices.length, Gdx.gl.GL_UNSIGNED_SHORT, 0);
 

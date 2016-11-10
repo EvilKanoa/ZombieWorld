@@ -1,10 +1,14 @@
 #version 120
 
-attribute vec3 position;
+attribute vec3 inPosition;
+attribute vec2 inTexCoord;
+
+varying vec2 texCoord;
 
 uniform mat4 projWorld;
 
 void main()
 {
-    gl_Position = projWorld * vec4(position, 1.0);
+    texCoord = inTexCoord;
+    gl_Position = projWorld * vec4(inPosition, 1.0);
 }

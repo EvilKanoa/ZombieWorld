@@ -3,6 +3,7 @@ package ca.kanoa.zombieworld.graphics;
 import ca.kanoa.zombieworld.ZombieWorldGame;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.BufferUtils;
@@ -20,17 +21,21 @@ public class Sprite {
 
     ShaderProgram shader;
 
+    Texture texture;
+
     public Sprite() {
         shader = ShaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
+
+        texture = new Texture("badlogic.jpg");
 
         projWorld = new Matrix4();
         projWorld = ZombieWorldGame.getGame().getOrthographicCamera().combined;
 
         float vertices[] = new float[]
-                {-100.0f, -100.0f, 0.0f,
-                 -100.0f, 100.0f, 0.0f,
-                 100.0f, 100.0f, 0.0f,
-                 100.0f, -100.0f, 0.0f};
+                {-100.0f, -100.0f, 0.0f, 0.0f, 0.0f,
+                 -100.0f, 100.0f, 0.0f, 0.0f, 1.0f,
+                 100.0f, 100.0f, 0.0f, 1.0f, 1.0f,
+                 100.0f, -100.0f, 0.0f, 1.0f, 0.0f};
 
         FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length);
         vertexBuffer.put(vertices);
@@ -63,10 +68,15 @@ public class Sprite {
         Gdx.gl.glBindBuffer(GL20.GL_ARRAY_BUFFER, vbo);
         Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-        shader.setVertexAttribute("position", 3, GL20.GL_FLOAT, false, 12, 0);
-        shader.enableVertexAttribute("position");
+        texture.bind();
 
-        shader.setUniformMatrix4fv("projWorld", projWorld.getValues(), 0, 16);
+        shader.setVertexAttribute("inPosition", 3, GL20.GL_FLOAT, false, 20, 0);
+        shader.setVertexAttribute("inTexCoord", 2, GL20.GL_FLOAT, false, 20, 12);
+        shader.enableVertexAttribute("position");
+        shader.enableVertexAttribute("inTexCoord");
+
+        shader.setUniformMatrix4fv(shader.getUniformLocation("projWorld"), projWorld.getValues(), 0, 16);
+        shader.setUniformi(shader.getUniformLocation("texture"), 0);
 
         Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, 6, GL20.GL_UNSIGNED_SHORT, 0);
 
