@@ -1,6 +1,5 @@
 #version 110
 
-varying vec3 normal;
 varying vec2 texCoord;
 
 uniform sampler2D texture;

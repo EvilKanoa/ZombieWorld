@@ -1,100 +1,88 @@
 package ca.kanoa.zombieworld.graphics;
 
-import ca.kanoa.zombieworld.Drawable;
-import ca.kanoa.zombieworld.Updateable;
 import ca.kanoa.zombieworld.ZombieWorldGame;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.Gdx;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
-import static com.badlogic.gdx.Gdx.gl;
+/**
+ * Created by Jonathan on 2016-11-03.
+ */
+public abstract class Render2D {
+    Matrix4 projWorld;
+    private int vbo, ebo;
 
-public class Render2D implements Drawable, Updateable {
+    ShaderProgram shader;
 
-    private OrthographicCamera camera;
-    private ShaderProgram triangleShader;
-    private ShaderProgram circleShader;
-    private int vbo;
-    /**
-     * List of 2d triangles to draw, array formatted like so: {xPos, yPos, length, height, r, g, b, a}
-     */
-    private List<Float[]> triangleQueue;
-    /**
-     * List of 2d circles to draw, array formatted like so: {xPos, yPos, radius, r, g, b, a}
-     */
-    private List<Float[]> circleQueue;
+    private short indices[];
+
+    void setVertices(float vertices[]) {
+        FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length);
+        vertexBuffer.put(vertices);
+        vertexBuffer.flip();
+
+        vbo = Gdx.gl.glGenBuffer();
+        Gdx.gl.glBindBuffer(GL20.GL_ARRAY_BUFFER, vbo);
+        Gdx.gl.glBufferData(GL20.GL_ARRAY_BUFFER, vertices.length * Float.SIZE / 8, vertexBuffer, Gdx.gl.GL_STATIC_DRAW);
+        Gdx.gl.glBindBuffer(GL20.GL_ARRAY_BUFFER, 0);
+    }
+
+    void setIndices(short indices[]) {
+        indices = new short[] {0, 1, 2, 0, 2, 3};
+        ShortBuffer indexBuffer = BufferUtils.newShortBuffer(indices.length);
+        indexBuffer.put(indices);
+        indexBuffer.flip();
+
+        ebo = Gdx.gl.glGenBuffer();
+        Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, ebo);
+        Gdx.gl.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, indices.length * Short.SIZE / 8, indexBuffer, GL20.GL_STATIC_DRAW);
+        Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
 
     public Render2D() {
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        triangleShader = ZombieWorldGame.getGame().shaderLoader.compile("2dVS.glsl", "triangle2dFS.glsl");
-        circleShader = ZombieWorldGame.getGame().shaderLoader.compile("2dVS.glsl", "circle2dFS.glsl");
-        triangleQueue = new LinkedList<Float[]>();
-        circleQueue = new LinkedList<Float[]>();
-        vbo = gl.glGenBuffer();
+        //shader = ShaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
+
+        projWorld = new Matrix4();
+        projWorld = ZombieWorldGame.getGame().getOrthographicCamera().combined;
+
+        /*
+        float vertices[] = new float[]
+                {-100.0f, -100.0f, 0.0f, 0.0f, 0.0f,
+                 -100.0f, 100.0f, 0.0f, 0.0f, 1.0f,
+                 100.0f, 100.0f, 0.0f, 1.0f, 1.0f,
+                 100.0f, -100.0f, 0.0f, 1.0f, 0.0f};
+        */
+
+
     }
 
-    // TODO: Implement priority and layers
-    @Override
+    public void update() {
+        ZombieWorldGame.getGame().getOrthographicCamera().translate(0.0f, 0.0f);
+        projWorld = ZombieWorldGame.getGame().getOrthographicCamera().combined;
+    }
+
+    abstract void setShaderVariables();
+
     public void render() {
-        // draw triangles
-        triangleShader.begin();
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, vbo);
+        shader.begin();
 
-        // generate data
-        float[] vertices = new float[10 * triangleQueue.size()];
-        int i = 0;
-        for (Float[] data : triangleQueue) {
-            vertices[i++] = data[0];
-            vertices[i++] = data[1];
-            vertices[i++] = data[0] + data[2];
-            vertices[i++] = data[1];
-            vertices[i++] = data[0];
-            vertices[i++] = data[1] + data[3];
-            vertices[i++] = data[4];
-            vertices[i++] = data[5];
-            vertices[i++] = data[6];
-            vertices[i++] = data[7];
-        }
-        gl.glBufferData(gl.GL_ARRAY_BUFFER, vertices.length * Float.SIZE / 8, BufferUtils.newFloatBuffer(vertices.length * Float.SIZE / 8).put(vertices).flip(), gl.GL_DYNAMIC_DRAW);
+        Gdx.gl.glBindBuffer(GL20.GL_ARRAY_BUFFER, vbo);
+        Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-        // draw triangles
-        //triangleShader.setUniform2fv("position",);
+        setShaderVariables();
+        shader.setUniformMatrix4fv(shader.getUniformLocation("projWorld"), projWorld.getValues(), 0, 16);
 
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-        triangleShader.end();
+        Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, indices.length, GL20.GL_UNSIGNED_SHORT, 0);
 
-        // draw circles
-        circleShader.begin();
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, vbo);
-        for (Float[] data : circleQueue) {
-
-        }
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0);
-        circleShader.end();
-
-        // clear queues
-        triangleQueue.clear();
-        circleQueue.clear();
+        shader.end();
     }
 
-    @Override
-    public void update(long delta) { }
+    public void dispose() {
 
-
-    public void drawCircle(float x, float y, float radius, Color color) {
-        circleQueue.add(new Float[]{x, y, radius, color.r, color.g, color.b, color.a});
-    }
-
-    public void drawTriangle(float x, float y, float length, float height, Color color) {
-        triangleQueue.add(new Float[]{x, y, length, height, color.r, color.g, color.b, color.a});
-    }
-
-    public OrthographicCamera getCamera() {
-        return camera;
     }
 }
