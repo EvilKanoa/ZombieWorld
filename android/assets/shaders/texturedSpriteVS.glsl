@@ -1,4 +1,3 @@
-#version 110
 attribute vec3 inPosition;
 attribute vec2 inTexCoord;
 

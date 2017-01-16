@@ -1,5 +1,3 @@
-#version 110
-
 uniform vec3 colour;
 
 void main()

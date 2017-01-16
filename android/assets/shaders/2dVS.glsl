@@ -1,5 +1,3 @@
-#version 110
-
 uniform vec2 position;
 
 void main()

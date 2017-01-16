@@ -1,5 +1,3 @@
-#version 110
-
 attribute vec3 inPosition;
 
 uniform mat4 projWorld;
