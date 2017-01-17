@@ -3,12 +3,17 @@ package ca.kanoa.zombieworld.graphics;
 import ca.kanoa.zombieworld.Drawable;
 import ca.kanoa.zombieworld.Updateable;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import ca.kanoa.zombieworld.ZombieWorldGame;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -20,6 +25,11 @@ public class GameObject implements Drawable {
     private Matrix4 world;
     private Matrix4 wvp; // world view projection matrix
 
+    private ModelBatch modelBatch;
+    private AssetManager assets;
+    private Array<ModelInstance> instances = new Array<ModelInstance>();
+    private boolean loading;
+
     private int vbo, ebo;
 
     private Vertex vertices[];
@@ -30,6 +40,7 @@ public class GameObject implements Drawable {
     Texture texture;
 
     public GameObject() {
+        loading = true;
         shader = ZombieWorldGame.getGame().shaderLoader.compile("cubeVS.glsl", "cubeFS.glsl");
 
         texture = new Texture("badlogic.jpg");
@@ -66,10 +77,24 @@ public class GameObject implements Drawable {
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, ebo);
         Gdx.gl.glBufferData(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, indices.length * Short.SIZE / 8, indexBuffer, GL20.GL_STATIC_DRAW);
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        assets = new AssetManager();
+        modelBatch = new ModelBatch();
+        assets.load("models/zombie1.g3dj", Model.class);
+    }
+
+    private void doneLoading() {
+        Model zombie = assets.get("models/zombie1.g3dj", Model.class);
+        ModelInstance zombieInstance = new ModelInstance(zombie);
+        instances.add(zombieInstance);
+        loading = false;
     }
 
     //@Override
     public void update(long delta, Vector3 translation, Vector3 scale) {
+        if (loading && assets.update())
+            doneLoading();
+
         this.translation.setToTranslation(translation);
         this.scale.setToScaling(scale);
         rotation.setToRotationRad(new Vector3(0.0f, 1.0f, 0.0f), 0.0f);
@@ -103,6 +128,10 @@ public class GameObject implements Drawable {
         shader.setUniformi(shader.getUniformLocation("texture"), 0);
 
         Gdx.gl.glDrawElements(Gdx.gl.GL_TRIANGLES, indices.length, Gdx.gl.GL_UNSIGNED_SHORT, 0);
+
+        modelBatch.begin(ZombieWorldGame.getGame().getPerspectiveCamera());
+        modelBatch.render(instances);
+        modelBatch.end();
 
         shader.end();
     }
