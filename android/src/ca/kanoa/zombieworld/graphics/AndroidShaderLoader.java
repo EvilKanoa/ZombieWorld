@@ -15,7 +15,8 @@ public class AndroidShaderLoader implements ShaderLoader {
         String fragmentData = String.format("#version 100\n%s\n", Gdx.files.internal("shaders" + File.separator +
                 fragmentShader).readString());
         ShaderProgram program = new ShaderProgram(vertexData, fragmentData);
-        Logger.log("Shader log: " + program.getLog());
+        if (program.getLog().length() > 0)
+            Logger.log(String.format("Shader Log (VS: %s, FS: %s): %s", vertexShader, fragmentShader, program.getLog()));
         return program;
     }
 

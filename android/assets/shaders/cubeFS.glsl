@@ -1,5 +1,5 @@
-varying vec3 normal;
 varying vec2 texCoord;
+varying vec3 normal;
 
 uniform sampler2D texture;
 
