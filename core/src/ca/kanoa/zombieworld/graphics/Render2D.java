@@ -15,7 +15,7 @@ import java.nio.ShortBuffer;
  */
 public abstract class Render2D {
     Matrix4 projWorld;
-    private int vbo, ebo;
+    private int vbo, ebo, numIndices;
 
     ShaderProgram shader;
 
@@ -33,19 +33,19 @@ public abstract class Render2D {
     }
 
     void setIndices(short indices[]) {
-        indices = new short[] {0, 1, 2, 0, 2, 3};
-        ShortBuffer indexBuffer = BufferUtils.newShortBuffer(indices.length);
+        numIndices = indices.length;
+        ShortBuffer indexBuffer = BufferUtils.newShortBuffer(numIndices);
         indexBuffer.put(indices);
         indexBuffer.flip();
 
         ebo = Gdx.gl.glGenBuffer();
         Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, ebo);
-        Gdx.gl.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, indices.length * Short.SIZE / 8, indexBuffer, GL20.GL_STATIC_DRAW);
+        Gdx.gl.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, numIndices * Short.SIZE / 8, indexBuffer, GL20.GL_STATIC_DRAW);
         Gdx.gl.glBindBuffer(GL20.GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
     public Render2D() {
-        //shader = ShaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
+        //shader = ZombieWorldGame.getGame().shaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
 
         projWorld = new Matrix4();
         projWorld = ZombieWorldGame.getGame().getOrthographicCamera().combined;
@@ -77,7 +77,7 @@ public abstract class Render2D {
         setShaderVariables();
         shader.setUniformMatrix4fv(shader.getUniformLocation("projWorld"), projWorld.getValues(), 0, 16);
 
-        Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, indices.length, GL20.GL_UNSIGNED_SHORT, 0);
+        Gdx.gl.glDrawElements(GL20.GL_TRIANGLES, numIndices, GL20.GL_UNSIGNED_SHORT, 0);
 
         shader.end();
     }

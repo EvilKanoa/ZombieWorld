@@ -10,9 +10,18 @@ import com.badlogic.gdx.graphics.Texture;
 public class TexturedSprite extends Render2D {
     Texture texture;
 
-    TexturedSprite(String texName, float vertices[], short indices[]) {
+    public TexturedSprite(String texName) {
+        super();
         shader = ZombieWorldGame.getGame().shaderLoader.compile("texturedSpriteVS.glsl", "texturedSpriteFS.glsl");
         this.texture = new Texture(texName);
+
+        float vertices[] = new float[]
+                {-100.0f, -100.0f, 0.0f, 0.0f, 0.0f,
+                 -100.0f, 100.0f, 0.0f, 0.0f, 1.0f,
+                 100.0f, 100.0f, 0.0f, 1.0f, 1.0f,
+                 100.0f, -100.0f, 0.0f, 1.0f, 0.0f};
+
+        short indices[] = new short[] {0, 3, 2, 0, 2, 1};
 
         setVertices(vertices);
         setIndices(indices);

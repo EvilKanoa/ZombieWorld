@@ -5,7 +5,8 @@ import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.files.Settings;
 import ca.kanoa.zombieworld.graphics.GameObject;
-import ca.kanoa.zombieworld.graphics.Render2D;
+import ca.kanoa.zombieworld.graphics.Shape;
+import ca.kanoa.zombieworld.graphics.TexturedSprite;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,15 +18,14 @@ import ca.kanoa.zombieworld.graphics.ShaderLoader;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
-	SpriteBatch batch;
-	//Texture img;
+    SpriteBatch batch;
+    //Texture img;
 
-    Render2D sprite;
     GameObject pizza;
+    TexturedSprite texturedSprite;
 
     public EventManager events = new EventManager();
     public BaseController controller;
-    public Render2D renderer;
     public GameWorld world;
     public ShaderLoader shaderLoader;
 
@@ -40,14 +40,13 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         this.shaderLoader = shaderLoader;
     }
 
-	@Override
-	public void create () {
+    @Override
+    public void create() {
         _instance = this;
         Settings.loadFile(Config.SETTINGS_FILE);
         Gdx.input.setInputProcessor(controller);
 
         world = new GameWorld();
-        //renderer = new Render2D();
 
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -59,14 +58,14 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         //perspectiveCamera.up.set(0.0f, 0.0f, 1.0f);
 
 
-		//batch = new SpriteBatch();
-		//img = new Texture("badlogic.jpg");
+        //batch = new SpriteBatch();
+        //img = new Texture("badlogic.jpg");
 
-        //sprite = new Render2D();
         pizza = new GameObject();
+        texturedSprite = new TexturedSprite("badlogic.jpg");
 
         lastUpdate = System.currentTimeMillis();
-	}
+    }
 
     @Override
     public void updateGame() {
@@ -76,6 +75,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
         //sprite.update();
         pizza.update(delta, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f));
+        texturedSprite.update();
 
         perspectiveCamera.position.add(controller.getMovementDirection().x, 0, controller.getMovementDirection().y);
 
@@ -101,18 +101,18 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //sprite.render();
         pizza.render();
+        texturedSprite.render();
 
         controller.render();
         world.render();
     }
 
     @Override
-	public void dispose () {
-		//batch.dispose();
-		//img.dispose();
-	}
+    public void dispose() {
+        //batch.dispose();
+        //img.dispose();
+    }
 
     public void registerEventListener(EventListener listener) {
         try {
@@ -129,6 +129,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     public OrthographicCamera getOrthographicCamera() {
         return orthographicCamera;
     }
+
     public PerspectiveCamera getPerspectiveCamera() {
         return perspectiveCamera;
     }
