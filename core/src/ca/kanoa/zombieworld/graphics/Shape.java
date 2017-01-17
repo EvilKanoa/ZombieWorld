@@ -7,10 +7,11 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Created by Jonathan on 2016-11-10.
  */
-public class Sprite extends Render2D {
+public class Shape extends Render2D {
     Vector3 colour;
 
-    Sprite(String texName, float vertices[], short indices[]) {
+    Shape(float vertices[], short indices[]) {
+        super();
         shader = ZombieWorldGame.getGame().shaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
 
         setVertices(vertices);
