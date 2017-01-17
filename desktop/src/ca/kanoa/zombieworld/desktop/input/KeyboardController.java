@@ -50,6 +50,11 @@ public class KeyboardController extends BaseController {
     }
 
     @Override
+    public void dispose() {
+
+    }
+
+    @Override
     public void update(long delta) {
 
     }

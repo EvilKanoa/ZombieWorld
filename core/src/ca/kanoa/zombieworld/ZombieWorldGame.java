@@ -52,7 +52,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera.near = 0.1f;
         perspectiveCamera.far = 10000.0f;
-        perspectiveCamera.direction.set(0.0f, 0.0f, 1.0f);
+        perspectiveCamera.position.set(0.0f, 0.0f, -1.0f);
+        perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.update(true);
         //perspectiveCamera.direction.set(0.0f, -1.0f, 0.0f);
         //perspectiveCamera.up.set(0.0f, 0.0f, 1.0f);
@@ -77,8 +78,6 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         pizza.update(delta, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f));
         texturedSprite.update();
 
-        perspectiveCamera.position.add(controller.getMovementDirection().x, 0, controller.getMovementDirection().y);
-
         perspectiveCamera.rotate(perspectiveCamera.up.cpy().crs(perspectiveCamera.direction.cpy()).nor(), controller.getShootDirection().y);
         perspectiveCamera.normalizeUp();
 
@@ -88,6 +87,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         perspectiveCamera.rotate(new Vector3(new Vector3(0.0f, 1.0f, 0.0f)), controller.getShootDirection().x);
         perspectiveCamera.normalizeUp();
         perspectiveCamera.direction.nor();
+
+        perspectiveCamera.position.add(controller.getMovementDirection().x, 0, controller.getMovementDirection().y);
 
         orthographicCamera.update();
         perspectiveCamera.update();
@@ -110,8 +111,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     @Override
     public void dispose() {
-        //batch.dispose();
-        //img.dispose();
+        pizza.dispose();
     }
 
     public void registerEventListener(EventListener listener) {

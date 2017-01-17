@@ -7,4 +7,6 @@ public interface Drawable {
      */
     void render();
 
+    void dispose();
+
 }

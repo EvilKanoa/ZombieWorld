@@ -19,8 +19,6 @@ public abstract class Render2D {
 
     ShaderProgram shader;
 
-    private short indices[];
-
     void setVertices(float vertices[]) {
         FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length);
         vertexBuffer.put(vertices);

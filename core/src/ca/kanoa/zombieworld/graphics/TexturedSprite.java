@@ -4,9 +4,6 @@ import ca.kanoa.zombieworld.ZombieWorldGame;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
-/**
- * Created by Jonathan on 2016-11-10.
- */
 public class TexturedSprite extends Render2D {
     Texture texture;
 

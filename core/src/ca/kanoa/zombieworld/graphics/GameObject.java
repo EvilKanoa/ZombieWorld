@@ -6,9 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -29,6 +32,7 @@ public class GameObject implements Drawable {
     private AssetManager assets;
     private Array<ModelInstance> instances = new Array<ModelInstance>();
     private boolean loading;
+    private Environment environment;
 
     private int vbo, ebo;
 
@@ -80,11 +84,14 @@ public class GameObject implements Drawable {
 
         assets = new AssetManager();
         modelBatch = new ModelBatch();
-        assets.load("models/zombie1.g3dj", Model.class);
+        assets.load("models/zombie1.g3db", Model.class);
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -0.8f, 0.3f, -1f));
     }
 
     private void doneLoading() {
-        Model zombie = assets.get("models/zombie1.g3dj", Model.class);
+        Model zombie = assets.get("models/zombie1.g3db", Model.class);
         ModelInstance zombieInstance = new ModelInstance(zombie);
         instances.add(zombieInstance);
         loading = false;
@@ -129,10 +136,17 @@ public class GameObject implements Drawable {
 
         Gdx.gl.glDrawElements(Gdx.gl.GL_TRIANGLES, indices.length, Gdx.gl.GL_UNSIGNED_SHORT, 0);
 
-        modelBatch.begin(ZombieWorldGame.getGame().getPerspectiveCamera());
-        modelBatch.render(instances);
-        modelBatch.end();
-
         shader.end();
+
+        modelBatch.begin(ZombieWorldGame.getGame().getPerspectiveCamera());
+        modelBatch.render(instances, environment);
+        modelBatch.end();
+    }
+
+    @Override
+    public void dispose() {
+        modelBatch.dispose();
+        instances.clear();
+        assets.dispose();
     }
 }

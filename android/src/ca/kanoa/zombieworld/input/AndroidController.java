@@ -73,6 +73,11 @@ public class AndroidController extends BaseController {
     }
 
     @Override
+    public void dispose() {
+
+    }
+
+    @Override
     public void update(long delta) {
 
     }

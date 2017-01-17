@@ -43,6 +43,11 @@ public class InactiveController extends BaseController {
     }
 
     @Override
+    public void dispose() {
+
+    }
+
+    @Override
     public void update(long delta) {
 
     }

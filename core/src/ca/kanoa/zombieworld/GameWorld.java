@@ -20,6 +20,11 @@ public class GameWorld implements Updateable, Drawable {
     }
 
     @Override
+    public void dispose() {
+
+    }
+
+    @Override
     public void update(long delta) {
         player.update(delta);
     }

@@ -16,6 +16,11 @@ public class Player extends Entity implements EventListener {
     }
 
     @Override
+    public void dispose() {
+
+    }
+
+    @Override
     public void update(long delta) {
         if (ZombieWorldGame.getGame().controller.isMoving()) {
             getPosition().add(ZombieWorldGame.getGame().controller.getMovementDirection().scl(delta));
