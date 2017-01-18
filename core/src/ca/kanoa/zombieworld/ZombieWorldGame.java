@@ -61,7 +61,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera.near = 0.1f;
         perspectiveCamera.far = 10000.0f;
-        perspectiveCamera.position.set(0.0f, 200.0f, -50.0f);
+        perspectiveCamera.position.set(0.0f, 5.0f, -10.0f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.update(true);
         //perspectiveCamera.direction.set(0.0f, -1.0f, 0.0f);
@@ -106,7 +106,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         perspectiveCamera.normalizeUp();
         perspectiveCamera.direction.nor();
 
-        perspectiveCamera.position.add(controller.getMovementDirection().x, 0, controller.getMovementDirection().y);
+        perspectiveCamera.position.add(controller.getMovementDirection().x * 0.01f, 0, controller.getMovementDirection().y * 0.01f);
 
         orthographicCamera.update();
         perspectiveCamera.update();
@@ -118,10 +118,14 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     @Override
     public void renderGame() {
         Gdx.gl.glClearColor(1, 1, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        modelBatch.begin(perspectiveCamera);
+        modelBatch.render(modelInstances);
+        modelBatch.end();
 
         pizza.render();
-        texturedSprite.render();
+        //texturedSprite.render();
 
         controller.render();
         world.render();
@@ -130,6 +134,9 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     @Override
     public void dispose() {
         pizza.dispose();
+        modelBatch.dispose();
+        modelInstances.clear();
+        assets.dispose();
     }
 
     public void registerEventListener(EventListener listener) {

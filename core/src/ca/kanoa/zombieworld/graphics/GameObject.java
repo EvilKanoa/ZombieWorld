@@ -32,6 +32,7 @@ public class GameObject implements Drawable, EventListener {
     ShaderProgram shader;
 
     ModelInstance zombie;
+    ModelInstance cube;
 
     Texture texture;
 
@@ -136,6 +137,8 @@ public class GameObject implements Drawable, EventListener {
     @EventHandler
     public void onAssetsLoaded(AssetsLoadedEvent event) {
         zombie = ZombieWorldGame.getGame().loadModel(ModelAsset.ZOMBIE_1);
+        cube = ZombieWorldGame.getGame().loadModel(ModelAsset.CUBE_1);
+        zombie.transform.scl(0.5f);
     }
 
     @Override
