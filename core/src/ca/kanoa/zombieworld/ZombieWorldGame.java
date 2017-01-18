@@ -1,20 +1,22 @@
 package ca.kanoa.zombieworld;
 
+import ca.kanoa.zombieworld.events.AssetsLoadedEvent;
 import ca.kanoa.zombieworld.events.EventListener;
 import ca.kanoa.zombieworld.events.EventManager;
 import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.files.Settings;
-import ca.kanoa.zombieworld.graphics.GameObject;
-import ca.kanoa.zombieworld.graphics.Shape;
-import ca.kanoa.zombieworld.graphics.TexturedSprite;
+import ca.kanoa.zombieworld.graphics.*;
+import ca.kanoa.zombieworld.graphics.ModelAsset;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.math.Vector3;
-import ca.kanoa.zombieworld.graphics.ShaderLoader;
+import com.badlogic.gdx.utils.Array;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
@@ -34,6 +36,10 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     private OrthographicCamera orthographicCamera;
     private PerspectiveCamera perspectiveCamera;
+    private ModelBatch modelBatch;
+    private Array<ModelInstance> modelInstances;
+    private AssetManager assets;
+    private boolean assetsLoaded;
 
     public ZombieWorldGame(BaseController controller, ShaderLoader shaderLoader) {
         this.controller = controller;
@@ -48,11 +54,14 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
         world = new GameWorld();
 
+        modelBatch = new ModelBatch();
+        modelInstances = new Array<ModelInstance>();
+        assets = new AssetManager();
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera.near = 0.1f;
         perspectiveCamera.far = 10000.0f;
-        perspectiveCamera.position.set(0.0f, 0.0f, -1.0f);
+        perspectiveCamera.position.set(0.0f, 200.0f, -50.0f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.update(true);
         //perspectiveCamera.direction.set(0.0f, -1.0f, 0.0f);
@@ -65,6 +74,10 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         pizza = new GameObject();
         texturedSprite = new TexturedSprite("badlogic.jpg");
 
+        for (ModelAsset modelAsset : ModelAsset.values())
+            assets.load(modelAsset.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class);
+        assetsLoaded = false;
+
         lastUpdate = System.currentTimeMillis();
     }
 
@@ -73,6 +86,11 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         // calculate time since last update (delta)
         delta = System.currentTimeMillis() - lastUpdate;
         lastUpdate = System.currentTimeMillis();
+
+        if (!assetsLoaded && assets.update()) {
+            assetsLoaded = true;
+            events.dispatchEvent(new AssetsLoadedEvent());
+        }
 
         //sprite.update();
         pizza.update(delta, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f));
@@ -120,6 +138,12 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         } catch (EventRegistrationExeception eventRegistrationExeception) {
             eventRegistrationExeception.printStackTrace();
         }
+    }
+
+    public ModelInstance loadModel(ModelAsset model) {
+        ModelInstance instance = new ModelInstance(assets.get(model.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class));
+        modelInstances.add(instance);
+        return instance;
     }
 
     public static ZombieWorldGame getGame() {

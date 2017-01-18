@@ -1,38 +1,28 @@
 package ca.kanoa.zombieworld.graphics;
 
 import ca.kanoa.zombieworld.Drawable;
-import ca.kanoa.zombieworld.Updateable;
+import ca.kanoa.zombieworld.events.AssetsLoadedEvent;
+import ca.kanoa.zombieworld.events.EventHandler;
+import ca.kanoa.zombieworld.events.EventListener;
+import ca.kanoa.zombieworld.utilities.Logger;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import ca.kanoa.zombieworld.ZombieWorldGame;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-public class GameObject implements Drawable {
+public class GameObject implements Drawable, EventListener {
     private Matrix4 translation;
     private Matrix4 scale;
     private Matrix4 rotation;
     private Matrix4 world;
     private Matrix4 wvp; // world view projection matrix
-
-    private ModelBatch modelBatch;
-    private AssetManager assets;
-    private Array<ModelInstance> instances = new Array<ModelInstance>();
-    private boolean loading;
-    private Environment environment;
 
     private int vbo, ebo;
 
@@ -41,11 +31,14 @@ public class GameObject implements Drawable {
 
     ShaderProgram shader;
 
+    ModelInstance zombie;
+
     Texture texture;
 
     public GameObject() {
-        loading = true;
         shader = ZombieWorldGame.getGame().shaderLoader.compile("cubeVS.glsl", "cubeFS.glsl");
+
+        ZombieWorldGame.getGame().registerEventListener(this);
 
         texture = new Texture("badlogic.jpg");
 
@@ -55,18 +48,36 @@ public class GameObject implements Drawable {
         world = new Matrix4();
         wvp = new Matrix4();
 
-        vertices = new Vertex[4];
+        // pos.x, pos.y, pos.z, nor.x, nor.y, nor.z, tex.x, tex.y
+        vertices = new Vertex[8];
         vertices[0] = new Vertex(-100.0f, -100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-        vertices[1] = new Vertex(100.0f, -100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
-        vertices[2] = new Vertex(100.0f, 100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
-        vertices[3] = new Vertex(-100.0f, 100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+        vertices[1] = new Vertex( 100.0f, -100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+        vertices[2] = new Vertex( 100.0f,  100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+        vertices[3] = new Vertex(-100.0f,  100.0f, 200.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+        vertices[4] = new Vertex(-100.0f, -100.0f, 400.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+        vertices[5] = new Vertex( 100.0f, -100.0f, 400.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+        vertices[6] = new Vertex( 100.0f,  100.0f, 400.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+        vertices[7] = new Vertex(-100.0f,  100.0f, 400.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
 
         FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length * 8);
         for (int i = 0; i < vertices.length; i++)
             vertexBuffer.put(vertices[i].getFloats());
         vertexBuffer.flip();
 
-        indices = new short[] {0, 1, 2, 0, 2, 3};
+        indices = new short[] {
+                0, 1, 2,
+                0, 2, 3,
+                1, 2, 6,
+                1, 5, 6,
+                0, 4, 3,
+                4, 3, 7,
+                0, 1, 5,
+                0, 5, 4,
+                2, 3, 6,
+                3, 6, 7,
+                4, 5, 7,
+                5, 6, 7
+        };
 
         ShortBuffer indexBuffer = BufferUtils.newShortBuffer(indices.length);
         indexBuffer.put(indices);
@@ -81,27 +92,10 @@ public class GameObject implements Drawable {
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, ebo);
         Gdx.gl.glBufferData(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, indices.length * Short.SIZE / 8, indexBuffer, GL20.GL_STATIC_DRAW);
         Gdx.gl.glBindBuffer(Gdx.gl.GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        assets = new AssetManager();
-        modelBatch = new ModelBatch();
-        assets.load("models/zombie1.g3db", Model.class);
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -0.8f, 0.3f, -1f));
-    }
-
-    private void doneLoading() {
-        Model zombie = assets.get("models/zombie1.g3db", Model.class);
-        ModelInstance zombieInstance = new ModelInstance(zombie);
-        instances.add(zombieInstance);
-        loading = false;
     }
 
     //@Override
     public void update(long delta, Vector3 translation, Vector3 scale) {
-        if (loading && assets.update())
-            doneLoading();
-
         this.translation.setToTranslation(translation);
         this.scale.setToScaling(scale);
         rotation.setToRotationRad(new Vector3(0.0f, 1.0f, 0.0f), 0.0f);
@@ -137,16 +131,15 @@ public class GameObject implements Drawable {
         Gdx.gl.glDrawElements(Gdx.gl.GL_TRIANGLES, indices.length, Gdx.gl.GL_UNSIGNED_SHORT, 0);
 
         shader.end();
+    }
 
-        modelBatch.begin(ZombieWorldGame.getGame().getPerspectiveCamera());
-        modelBatch.render(instances, environment);
-        modelBatch.end();
+    @EventHandler
+    public void onAssetsLoaded(AssetsLoadedEvent event) {
+        zombie = ZombieWorldGame.getGame().loadModel(ModelAsset.ZOMBIE_1);
     }
 
     @Override
     public void dispose() {
-        modelBatch.dispose();
-        instances.clear();
-        assets.dispose();
+
     }
 }
