@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
@@ -61,11 +62,11 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         perspectiveCamera.near = 0.1f;
         perspectiveCamera.far = 10000.0f;
-        perspectiveCamera.position.set(0.0f, 5.0f, -10.0f);
+        perspectiveCamera.position.set(0.0f, 50.0f, -10.0f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.update(true);
-        //perspectiveCamera.direction.set(0.0f, -1.0f, 0.0f);
-        //perspectiveCamera.up.set(0.0f, 0.0f, 1.0f);
+        perspectiveCamera.direction.set(0.0f, MathUtils.sinDeg(-70.0f), MathUtils.cosDeg(-70.0f));
+        perspectiveCamera.up.set(0.0f, 1.0f, 0.0f);
 
 
         //batch = new SpriteBatch();
@@ -96,17 +97,9 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         pizza.update(delta, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f));
         texturedSprite.update();
 
-        perspectiveCamera.rotate(perspectiveCamera.up.cpy().crs(perspectiveCamera.direction.cpy()).nor(), controller.getShootDirection().y);
-        perspectiveCamera.normalizeUp();
+        if (perspectiveCamera.direction.y > 0.0f) perspectiveCamera.direction.y = 0.0f;
 
-        if (perspectiveCamera.direction.y > 0.95f) perspectiveCamera.direction.y = 0.95f;
-        if (perspectiveCamera.direction.y < -0.95f) perspectiveCamera.direction.y = -0.95f;
-
-        perspectiveCamera.rotate(new Vector3(new Vector3(0.0f, 1.0f, 0.0f)), controller.getShootDirection().x);
-        perspectiveCamera.normalizeUp();
-        perspectiveCamera.direction.nor();
-
-        perspectiveCamera.position.add(controller.getMovementDirection().x * 0.01f, 0, controller.getMovementDirection().y * 0.01f);
+        perspectiveCamera.position.add(controller.getMovementDirection().x * 0.1f, 0, controller.getMovementDirection().y * 0.1f);
 
         orthographicCamera.update();
         perspectiveCamera.update();
