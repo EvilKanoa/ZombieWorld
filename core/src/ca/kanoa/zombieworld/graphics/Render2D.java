@@ -17,7 +17,7 @@ public abstract class Render2D {
     Matrix4 projWorld;
     private int vbo, ebo, numIndices;
 
-    ShaderProgram shader;
+    ShaderProgram shader; // main shader holder
 
     void setVertices(float vertices[]) {
         FloatBuffer vertexBuffer = BufferUtils.newFloatBuffer(vertices.length);
