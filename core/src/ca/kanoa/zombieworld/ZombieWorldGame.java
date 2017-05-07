@@ -7,17 +7,17 @@ import ca.kanoa.zombieworld.events.EventRegistrationExeception;
 import ca.kanoa.zombieworld.files.Settings;
 import ca.kanoa.zombieworld.graphics.*;
 import ca.kanoa.zombieworld.graphics.ModelAsset;
+import ca.kanoa.zombieworld.graphics.PerspectiveCamera;
 import ca.kanoa.zombieworld.input.BaseController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.PerformanceCounter;
 
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
@@ -35,8 +35,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
     private static ZombieWorldGame _instance;
     private long lastUpdate, delta;
 
-    private OrthographicCamera orthographicCamera;
     private PerspectiveCamera perspectiveCamera;
+    private OrthographicCamera orthographicCamera;
     private ModelBatch modelBatch;
     private Array<ModelInstance> modelInstances;
     private AssetManager assets;
@@ -58,15 +58,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         modelBatch = new ModelBatch();
         modelInstances = new Array<ModelInstance>();
         assets = new AssetManager();
+        perspectiveCamera = new PerspectiveCamera();
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        perspectiveCamera.near = 0.1f;
-        perspectiveCamera.far = 10000.0f;
-        perspectiveCamera.position.set(0.0f, 50.0f, -10.0f);
-        perspectiveCamera.lookAt(0, 0, 0);
-        perspectiveCamera.update(true);
-        perspectiveCamera.direction.set(0.0f, MathUtils.sinDeg(-70.0f), MathUtils.cosDeg(-70.0f));
-        perspectiveCamera.up.set(0.0f, 1.0f, 0.0f);
 
 
         //batch = new SpriteBatch();
@@ -97,12 +90,8 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         pizza.update(delta, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f));
         texturedSprite.update();
 
-        if (perspectiveCamera.direction.y > 0.0f) perspectiveCamera.direction.y = 0.0f;
-
-        perspectiveCamera.position.add(controller.getMovementDirection().x * 0.1f, 0, controller.getMovementDirection().y * 0.1f);
-
-        orthographicCamera.update();
         perspectiveCamera.update();
+        orthographicCamera.update();
 
         controller.update(delta);
         world.update(delta);
@@ -113,7 +102,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        modelBatch.begin(perspectiveCamera);
+        modelBatch.begin(perspectiveCamera.perspectiveCamera);
         modelBatch.render(modelInstances);
         modelBatch.end();
 
@@ -154,7 +143,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         return orthographicCamera;
     }
 
-    public PerspectiveCamera getPerspectiveCamera() {
-        return perspectiveCamera;
+    public com.badlogic.gdx.graphics.PerspectiveCamera getPerspectiveCamera() {
+        return perspectiveCamera.perspectiveCamera;
     }
 }
