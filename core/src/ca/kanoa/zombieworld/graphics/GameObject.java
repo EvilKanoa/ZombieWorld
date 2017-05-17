@@ -24,6 +24,53 @@ public class GameObject implements Drawable, EventListener {
     private Matrix4 world;
     private Matrix4 wvp; // world view projection matrix
 
+    ShaderProgram shader;
+
+    public ModelInstance modelInstance;
+
+    public GameObject(ModelInstance modelInstance) {
+        ZombieWorldGame.getGame().registerEventListener(this);
+
+        this.modelInstance = new ModelInstance(modelInstance);
+    }
+
+    //@Override
+    public void update(long delta, Vector3 translation, Vector3 scale) {
+        this.translation.setToTranslation(translation);
+        this.scale.setToScaling(scale);
+        rotation.setToRotationRad(new Vector3(0.0f, 1.0f, 0.0f), 0.0f);
+
+        world.idt();
+        //world = translation.mul(scale).mul(rotation);
+        world.set(this.translation);
+        world.mul(this.scale);
+        wvp.set(ZombieWorldGame.getGame().getPerspectiveCamera().projection);
+        wvp.mul(ZombieWorldGame.getGame().getPerspectiveCamera().view);
+        wvp.mul(world);
+    }
+
+    @Override
+    public void render() {
+
+    }
+    /*
+    @EventHandler
+    public void onAssetsLoaded(AssetsLoadedEvent event) {
+        modelInstance = loadModel(ModelAsset.ZOMBIE_1);
+    }
+    */
+    @Override
+    public void dispose() {
+
+    }
+}
+    /*
+    private Matrix4 translation;
+    private Matrix4 scale;
+    private Matrix4 rotation;
+    private Matrix4 world;
+    private Matrix4 wvp; // world view projection matrix
+
     private int vbo, ebo;
 
     private Vertex vertices[];
@@ -146,3 +193,4 @@ public class GameObject implements Drawable, EventListener {
 
     }
 }
+//*/
