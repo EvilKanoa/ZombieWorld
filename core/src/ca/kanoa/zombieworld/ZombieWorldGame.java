@@ -19,6 +19,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.PerformanceCounter;
 
+import java.util.Arrays;
+
 public class ZombieWorldGame extends OrganizedApplicationAdapter {
 
     SpriteBatch batch;
@@ -68,8 +70,7 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         pizza = new GameObject();
         texturedSprite = new TexturedSprite("badlogic.jpg");
 
-        for (ModelAsset modelAsset : ModelAsset.values())
-            assets.load(modelAsset.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class);
+        Arrays.stream(ModelAsset.values()).forEach(asset -> assets.load(asset.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class));
         assetsLoaded = false;
 
         lastUpdate = System.currentTimeMillis();
