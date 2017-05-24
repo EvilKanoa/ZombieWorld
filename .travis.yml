@@ -8,6 +8,5 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-jdk:
-  - oraclejdk8
-  - oraclejdk7
+notifications:
+    slack: zombieworlddev:V1FpfcK1CWkwiaW3aCxGxJOy
