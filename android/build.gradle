@@ -1,5 +1,5 @@
 android {
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "25.0.0"
     compileSdkVersion 24
     sourceSets {
         main {
@@ -16,15 +16,12 @@ android {
     }
     defaultConfig {
         applicationId "ca.kanoa.zombieworld"
-        minSdkVersion 24
+        minSdkVersion 8
         targetSdkVersion 24
-        jackOptions {
-            enabled true
-        }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
@@ -89,8 +86,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
     }
 
     classpath {

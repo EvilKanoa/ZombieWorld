@@ -70,7 +70,9 @@ public class ZombieWorldGame extends OrganizedApplicationAdapter {
         pizza = new GameObject();
         texturedSprite = new TexturedSprite("badlogic.jpg");
 
-        Arrays.stream(ModelAsset.values()).forEach(asset -> assets.load(asset.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class));
+        for (ModelAsset modelAsset : ModelAsset.values())  {
+            assets.load(modelAsset.getFilename(), Model.class);
+        }
         assetsLoaded = false;
 
         lastUpdate = System.currentTimeMillis();
