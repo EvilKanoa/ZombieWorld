@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Jonathan on 2017-05-11.
@@ -22,9 +23,7 @@ public class GameObjects {
     public GameObjects() {
         modelBatch = new ModelBatch();
         assets = new AssetManager();
-
-        for (ModelAsset modelAsset : ModelAsset.values())
-            assets.load(modelAsset.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class);
+        Arrays.stream(ModelAsset.values()).forEach(it -> assets.load(it.getFilename(), com.badlogic.gdx.graphics.g3d.Model.class));
         assetsLoaded = false;
     }
 
@@ -37,7 +36,7 @@ public class GameObjects {
 
     public void render() {
         modelBatch.begin(ZombieWorldGame.getGame().getPerspectiveCamera());
-        modelBatch.render(modelInstances);
+        Arrays.stream(gameObects.toArray(new GameObject[0])).map(it -> it.modelInstance).forEach(it -> modelBatch.render(it));
         modelBatch.end();
     }
 
@@ -50,8 +49,9 @@ public class GameObjects {
 
     @EventHandler
     public void onAssetsLoaded(AssetsLoadedEvent event) {
-        for (ModelAsset modelAsset: ModelAsset.values()) {
-            modelInstance = loadModel(modelAsset);
+        ModelAsset[] assets = ModelAsset.values();
+        for (int i = 0; i < assets.length; i++) {
+            gameObects.get(i).modelInstance = loadModel(assets[i]);
         }
     }
 

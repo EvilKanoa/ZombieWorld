@@ -16,7 +16,7 @@ android {
     }
     defaultConfig {
         applicationId "ca.kanoa.zombieworld"
-        minSdkVersion 8
+        minSdkVersion 24
         targetSdkVersion 24
     }
 }
@@ -82,8 +82,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
     classpath {
