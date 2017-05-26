@@ -5,9 +5,12 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
     }
+
+    new File('local.properties').append("\nsdk.dir=android-sdk\n")
 }
 
 allprojects {
