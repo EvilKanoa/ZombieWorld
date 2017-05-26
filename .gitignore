@@ -33,6 +33,8 @@ android/gen/
 *.iml
 out/
 com_crashlytics_export_strings.xml
+android-sdk/*
+!android-sdk/licenses/
 
 ## Eclipse
 .classpath
