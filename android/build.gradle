@@ -1,6 +1,6 @@
 android {
-    buildToolsVersion "25.0.0"
-    compileSdkVersion 25
+    buildToolsVersion "24.0.2"
+    compileSdkVersion 24
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -17,11 +17,14 @@ android {
     defaultConfig {
         applicationId "ca.kanoa.zombieworld"
         minSdkVersion 8
-        targetSdkVersion 25
+        targetSdkVersion 24
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_6
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
