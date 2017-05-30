@@ -9,9 +9,9 @@ public class MouseController extends KeyboardController {
 
     @Override
     public Vector2 getShootDirection() {
-        if (ZombieWorldGame.getGame().world != null &&
-                ZombieWorldGame.getGame().world.getPlayer() != null && isShooting()) {
-            return new Vector2(getX(), getY()).sub(ZombieWorldGame.getGame().world.getPlayer().getPosition()).nor();
+        if (ZombieWorldGame.Companion.getGame().getWorld() != null &&
+                ZombieWorldGame.Companion.getGame().getWorld().getPlayer() != null && isShooting()) {
+            return new Vector2(getX(), getY()).sub(ZombieWorldGame.Companion.getGame().getWorld().getPlayer().getPosition()).nor();
         } else {
             return new Vector2(0, 0);
         }

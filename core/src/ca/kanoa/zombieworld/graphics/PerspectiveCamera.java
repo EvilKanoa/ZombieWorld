@@ -26,7 +26,7 @@ public class PerspectiveCamera {
         perspectiveCamera.direction.set(0.0f, MathUtils.sinDeg(angle), MathUtils.cosDeg(angle));
         if (perspectiveCamera.direction.y > 0.0f) perspectiveCamera.direction.y = 0.0f;
 
-        perspectiveCamera.position.add(ZombieWorldGame.getGame().controller.getMovementDirection().x * speed, 0, ZombieWorldGame.getGame().controller.getMovementDirection().y * speed);
+        perspectiveCamera.position.add(ZombieWorldGame.Companion.getGame().getController().getMovementDirection().x * speed, 0, ZombieWorldGame.Companion.getGame().getController().getMovementDirection().y * speed);
         perspectiveCamera.update();
     }
 }

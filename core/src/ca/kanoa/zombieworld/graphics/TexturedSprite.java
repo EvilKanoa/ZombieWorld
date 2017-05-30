@@ -9,7 +9,7 @@ public class TexturedSprite extends Render2D {
 
     public TexturedSprite(String texName) {
         super();
-        shader = ZombieWorldGame.getGame().shaderLoader.compile("texturedSpriteVS.glsl", "texturedSpriteFS.glsl");
+        shader = ZombieWorldGame.Companion.getGame().getShaderLoader().compile("texturedSpriteVS.glsl", "texturedSpriteFS.glsl");
         this.texture = new Texture(texName);
 
         float vertices[] = new float[]

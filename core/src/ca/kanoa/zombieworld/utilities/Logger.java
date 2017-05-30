@@ -63,7 +63,7 @@ public class Logger {
 
     public static void log(String message, String source, LogLevel level) {
         LogEvent event = new LogEvent(message, source, level);
-        ZombieWorldGame.getGame().events.dispatchEvent(event);
+        ZombieWorldGame.Companion.getGame().getEvents().dispatchEvent(event);
         System.out.println(event.getOutput());
     }
 

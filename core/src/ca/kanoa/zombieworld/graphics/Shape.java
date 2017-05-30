@@ -12,7 +12,7 @@ public class Shape extends Render2D {
 
     Shape(float vertices[], short indices[]) {
         super();
-        shader = ZombieWorldGame.getGame().shaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
+        shader = ZombieWorldGame.Companion.getGame().getShaderLoader().compile("spriteVS.glsl", "spriteFS.glsl");
 
         setVertices(vertices);
         setIndices(indices);

@@ -1,7 +1,10 @@
-apply plugin: "java"
+apply plugin: "kotlin"
 
 sourceCompatibility = 1.6
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main {
+    java.srcDirs = ['src']
+    kotlin.srcDirs = ['src']
+}
 
 project.ext.mainClassName = "ca.kanoa.zombieworld.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../android/assets");
