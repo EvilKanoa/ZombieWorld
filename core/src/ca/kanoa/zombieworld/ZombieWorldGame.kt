@@ -15,9 +15,7 @@ import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g3d.*
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.PerformanceCounter
 
 import java.util.Arrays
 
@@ -44,7 +42,7 @@ class ZombieWorldGame(var controller: BaseController, var shaderLoader: ShaderLo
 
     override fun create() {
         game = this
-        Settings.loadFile(Config.SETTINGS_FILE)
+        Settings.loadFile(Config.TITLE)
         Gdx.input.inputProcessor = controller
 
         world = GameWorld()

@@ -25,7 +25,7 @@ class AndroidController : BaseController() {
 
     override fun getShootDirection(): Vector2 {
         if (isShooting()) {
-            return Vector2((getX(shootIndex) - (Size.getScreenWidth() - Size.getWidthCenti(STICK_SIZE) / 2)) / Size.getWidthCenti(STICK_SIZE / 2),
+            return Vector2((getX(shootIndex) - (Size.screenWidth - Size.getWidthCenti(STICK_SIZE) / 2)) / Size.getWidthCenti(STICK_SIZE / 2),
                     (getY(shootIndex) - Size.getHeightCenti(STICK_SIZE) / 2) / Size.getHeightCenti(STICK_SIZE / 2)).nor()
         } else {
             return Vector2(0f, 0f)
@@ -72,7 +72,7 @@ class AndroidController : BaseController() {
         if (x < Size.getWidthCenti(STICK_SIZE) && Size.convertY(y.toFloat()) < Size.getHeightCenti(STICK_SIZE) &&
                 moveIndex == -1) { // check if inside movement stick
             moveIndex = pointer
-        } else if (x > Size.getScreenWidth() - Size.getWidthCenti(STICK_SIZE) &&
+        } else if (x > Size.screenWidth - Size.getWidthCenti(STICK_SIZE) &&
                 Size.convertY(y.toFloat()) < Size.getHeightCenti(STICK_SIZE) && shootIndex == -1) { // check if inside shoot stick
             shootIndex = pointer
         }
