@@ -1,7 +1,6 @@
 package ca.kanoa.zombieworld.desktop.graphics;
 
 import ca.kanoa.zombieworld.graphics.ShaderLoader;
-import ca.kanoa.zombieworld.utilities.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
@@ -17,8 +16,8 @@ public class DesktopShaderLoader implements ShaderLoader {
                 fragmentShader).readString());
         ShaderProgram program = new ShaderProgram(vertexData, fragmentData);
         if (program.getLog().length() > 0) {
-            Logger.debug(String.format("Shader Log (VS: %s, FS: %s): %s", vertexShader, fragmentShader,
-                    program.getLog()), "DesktopShaderLoader");
+            Gdx.app.debug("DesktopShaderLoader", String.format("Shader Log (VS: %s, FS: %s): %s", vertexShader, fragmentShader,
+                    program.getLog()));
         }
         return program;
     }

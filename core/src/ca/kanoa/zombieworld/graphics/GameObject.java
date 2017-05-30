@@ -4,7 +4,6 @@ import ca.kanoa.zombieworld.Drawable;
 import ca.kanoa.zombieworld.events.AssetsLoadedEvent;
 import ca.kanoa.zombieworld.events.EventHandler;
 import ca.kanoa.zombieworld.events.EventListener;
-import ca.kanoa.zombieworld.utilities.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
