@@ -4,7 +4,6 @@ import ca.kanoa.zombieworld.Drawable;
 import ca.kanoa.zombieworld.events.AssetsLoadedEvent;
 import ca.kanoa.zombieworld.events.EventHandler;
 import ca.kanoa.zombieworld.events.EventListener;
-import ca.kanoa.zombieworld.utilities.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,9 +36,9 @@ public class GameObject implements Drawable, EventListener {
     Texture texture;
 
     public GameObject() {
-        shader = ZombieWorldGame.getGame().shaderLoader.compile("cubeVS.glsl", "cubeFS.glsl");
+        shader = ZombieWorldGame.Companion.getGame().getShaderLoader().compile("cubeVS.glsl", "cubeFS.glsl");
 
-        ZombieWorldGame.getGame().registerEventListener(this);
+        ZombieWorldGame.Companion.getGame().registerEventListener(this);
 
         texture = new Texture("badlogic.jpg");
 
@@ -105,8 +104,8 @@ public class GameObject implements Drawable, EventListener {
         //world = translation.mul(scale).mul(rotation);
         world.set(this.translation);
         world.mul(this.scale);
-        wvp.set(ZombieWorldGame.getGame().getPerspectiveCamera().projection);
-        wvp.mul(ZombieWorldGame.getGame().getPerspectiveCamera().view);
+        wvp.set(ZombieWorldGame.Companion.getGame().getPerspectiveCamera().projection);
+        wvp.mul(ZombieWorldGame.Companion.getGame().getPerspectiveCamera().view);
         wvp.mul(world);
     }
 
@@ -136,8 +135,8 @@ public class GameObject implements Drawable, EventListener {
 
     @EventHandler
     public void onAssetsLoaded(AssetsLoadedEvent event) {
-        zombie = ZombieWorldGame.getGame().loadModel(ModelAsset.ZOMBIE_1);
-        cube = ZombieWorldGame.getGame().loadModel(ModelAsset.CUBE_1);
+        zombie = ZombieWorldGame.Companion.getGame().loadModel(ModelAsset.ZOMBIE_1);
+        cube = ZombieWorldGame.Companion.getGame().loadModel(ModelAsset.CUBE_1);
         zombie.transform.scl(0.5f);
     }
 

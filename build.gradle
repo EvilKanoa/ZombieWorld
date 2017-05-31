@@ -1,4 +1,9 @@
 buildscript {
+    ext {
+        kotlinVersion = '1.1.2'
+        androidToolsVersion = '2.2.2'
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -7,7 +12,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath "com.android.tools.build:gradle:$androidToolsVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 
     new File('local.properties').append("\nsdk.dir=android-sdk\n")
@@ -20,11 +26,12 @@ allprojects {
     version = '1.0'
     ext {
         appName = "ZombieWorld"
-        gdxVersion = '1.9.4'
+        gdxVersion = '1.9.6'
         roboVMVersion = '2.2.0'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        ktxVersion = '1.9.6-b3'
     }
 
     repositories {
@@ -39,7 +46,7 @@ allprojects {
 }
 
 project(":desktop") {
-    apply plugin: "java"
+    apply plugin: "kotlin"
 
 
     dependencies {
@@ -55,6 +62,7 @@ project(":desktop") {
 
 project(":android") {
     apply plugin: "android"
+    apply plugin: "kotlin-android"
 
     configurations { natives }
 
@@ -82,6 +90,20 @@ project(":core") {
 
 
     dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+
+        compile "io.github.libktx:ktx-app:$ktxVersion"
+        compile "io.github.libktx:ktx-assets:$ktxVersion"
+        compile "io.github.libktx:ktx-async:$ktxVersion"
+        compile "io.github.libktx:ktx-collections:$ktxVersion"
+        compile "io.github.libktx:ktx-i18n:$ktxVersion"
+        compile "io.github.libktx:ktx-inject:$ktxVersion"
+        compile "io.github.libktx:ktx-log:$ktxVersion"
+        compile "io.github.libktx:ktx-math:$ktxVersion"
+        compile "io.github.libktx:ktx-scene2d:$ktxVersion"
+        compile "io.github.libktx:ktx-style:$ktxVersion"
+
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"

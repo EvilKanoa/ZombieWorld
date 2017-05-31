@@ -46,7 +46,7 @@ public abstract class Render2D {
         //shader = ZombieWorldGame.getGame().shaderLoader.compile("spriteVS.glsl", "spriteFS.glsl");
 
         projWorld = new Matrix4();
-        projWorld = ZombieWorldGame.getGame().getOrthographicCamera().combined;
+        projWorld = ZombieWorldGame.Companion.getGame().getOrthographicCamera().combined;
 
         /*
         float vertices[] = new float[]
@@ -60,8 +60,8 @@ public abstract class Render2D {
     }
 
     public void update() {
-        ZombieWorldGame.getGame().getOrthographicCamera().translate(0.0f, 0.0f);
-        projWorld = ZombieWorldGame.getGame().getOrthographicCamera().combined;
+        ZombieWorldGame.Companion.getGame().getOrthographicCamera().translate(0.0f, 0.0f);
+        projWorld = ZombieWorldGame.Companion.getGame().getOrthographicCamera().combined;
     }
 
     abstract void setShaderVariables();
